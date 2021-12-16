@@ -33,3 +33,28 @@ public:
         return dp[n][sum];
     }
 };
+
+class Solution {
+public:
+    
+    bool helper(vector<int> &nums,int sum, int idx, vector<int> &dp) {
+        if(sum==0) return true;
+        if(sum < 0) return false;
+        if(idx == nums.size()) return false;
+        if(dp[sum] != -1) return dp[sum];
+        bool res = false;
+        for(int i = idx;i<nums.size();i++) {
+            res = res || helper(nums,sum-nums[i],i+1,dp);
+        }
+        dp[sum] = res;
+        return res;
+    }
+    
+    bool canPartition(vector<int>& nums) {
+        int sum = accumulate(nums.begin(),nums.end(),0);
+        if(sum & 1) return false;
+        sum/=2;
+        vector<int> dp(sum+1,-1);
+        return helper(nums,sum,0,dp);
+    }
+};
