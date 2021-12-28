@@ -37,3 +37,35 @@ public:
         return true;
     }
 };
+
+class Solution {
+public:
+    vector<int> findOrder(int numCourses, vector<vector<int>>& prerequisites) {
+        vector<unordered_set<int>> m(numCourses);
+        vector<int> indeg(numCourses,0);
+        for(int i=0;i<prerequisites.size();i++) {
+            m[prerequisites[i][1]].insert(prerequisites[i][0]);
+            indeg[prerequisites[i][0]]++;
+        }
+        queue<int> q;
+        for(int i=0;i<numCourses;i++) {
+            if(indeg[i]==0) q.push(i);
+        }
+        
+        vector<int> res;
+        while(!q.empty()) {
+            int node = q.front();
+            q.pop();
+            res.push_back(node);
+            
+            if(m[node].size()) {
+                for(int a : m[node]) {
+                    indeg[a]--;
+                    if(indeg[a]==0) q.push(a);
+                }
+            }
+        }
+        if(res.size()==numCourses) return res;
+        else return {};
+    }
+};
